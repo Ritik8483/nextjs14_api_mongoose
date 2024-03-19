@@ -8,7 +8,8 @@ import { useEffect } from "react";
 export default function Home() {
   const session = useSession()
   useEffect(() => {
-    if (session?.status === "authenticated") {
+    if (session?.status === "authenticated" &&
+    session?.data?.message === "UNAUTORIZED") {
       redirect("/dashboard");
     }
   }, [session?.status]);

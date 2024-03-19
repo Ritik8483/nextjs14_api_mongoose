@@ -7,11 +7,11 @@ import React, { useEffect } from "react";
 const page = () => {
   const session = useSession();
 
-  useEffect(() => {
-    if (session?.data?.user?.name) {
-      redirect("/dashboard");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (session?.data?.user?.name) {
+  //     redirect("/dashboard");
+  //   }
+  // }, []);
 
   return (
     <div>

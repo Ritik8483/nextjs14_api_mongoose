@@ -7,18 +7,39 @@ import React, { useEffect, useState } from "react";
 
 const page = () => {
   const session = useSession();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
+    console.log(email, password, name);
+    const response = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      username: name,
+    });
+    if (response.ok) {
+      setEmail("");
+      setName("");
+      setPassword("");
+      alert("User Looged In");
+    } else if (response.error === "CredentialsSignin") {
+      alert("Invalid credentials");
+    } else {
+      alert("Error");
+    }
+    console.log("response", response);
   };
 
   console.log("session", session);
 
   useEffect(() => {
-    if (session?.status === "authenticated") {
+    if (
+      session?.status === "authenticated" &&
+      session?.data?.message !== "UNAUTORIZED"
+    ) {
       redirect("/dashboard");
     }
   }, [session?.status]);
@@ -44,6 +65,12 @@ const page = () => {
           onSubmit={handleSubmit}
         >
           <h2>Login Page</h2>
+          <input
+            name="name"
+            placeholder="User Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <input
             name="email"
             placeholder="Email"
@@ -76,6 +103,7 @@ const page = () => {
               style={{ cursor: "pointer" }}
             />
             <Image
+              onClick={() => signIn("azure-ad")}
               src="/microsoft.svg"
               alt="microsoft"
               height="40"
